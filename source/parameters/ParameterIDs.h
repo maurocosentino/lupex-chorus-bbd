@@ -1,11 +1,9 @@
 #pragma once
 
-namespace Lupex::ParameterIDs
+namespace Chorus::ParameterIDs
 {
-    constexpr const char* TIME        = "time";
-    constexpr const char* FEEDBACK    = "feedback";
-    constexpr const char* MIX         = "mix";
-    constexpr const char* TONE        = "tone";
-    constexpr const char* TOGGLE      = "pingpong";
-    constexpr const char* BYPASS  = "bypass";
+    constexpr const char* RATE     = "rate";
+    constexpr const char* DEPTH    = "depth";
+    constexpr const char* MIX      = "mix";
+    constexpr const char* BYPASS   = "bypass";
 }

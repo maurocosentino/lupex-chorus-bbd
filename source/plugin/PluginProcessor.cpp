@@ -1,10 +1,10 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-namespace Lupex
+namespace Chorus
 {
 
-LupexProcessor::LupexProcessor()
+ChorusProcessor::ChorusProcessor()
     : AudioProcessor (BusesProperties()
         .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
         .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
@@ -12,71 +12,67 @@ LupexProcessor::LupexProcessor()
 {
 }
 
-LupexProcessor::~LupexProcessor() {}
+ChorusProcessor::~ChorusProcessor() {}
 
-void LupexProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void ChorusProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     engine.prepare (sampleRate, samplesPerBlock);
 }
 
-void LupexProcessor::releaseResources()
+void ChorusProcessor::releaseResources()
 {
     engine.reset();
 }
 
-    void LupexProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                        juce::MidiBuffer&)
+void ChorusProcessor::processBlock (juce::AudioBuffer<float>& buffer,
+                                    juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
 
     if (parameters.getBypass())
-    {
-        // bypass activo - señal limpia
         return;
-    }
-    engine.setPingPong (parameters.getToggle());
+
     engine.process (buffer.getWritePointer (0),
                     buffer.getWritePointer (1),
                     buffer.getNumSamples(),
-                    parameters.getTime(),
-                    parameters.getFeedback(),
-                    parameters.getMix(),
-                    parameters.getTone());
+                    parameters.getRate(),
+                    parameters.getDepth(),
+                    parameters.getMix());
 }
 
-juce::AudioProcessorEditor* LupexProcessor::createEditor()
+juce::AudioProcessorEditor* ChorusProcessor::createEditor()
 {
-    return new LupexEditor (*this);
+    return new ChorusEditor (*this);
 }
 
-bool LupexProcessor::hasEditor() const { return true; }
-const juce::String LupexProcessor::getName() const { return JucePlugin_Name; }
-bool LupexProcessor::acceptsMidi() const { return false; }
-bool LupexProcessor::producesMidi() const { return false; }
-double LupexProcessor::getTailLengthSeconds() const { return 2.0; }
-int LupexProcessor::getNumPrograms() { return 1; }
-int LupexProcessor::getCurrentProgram() { return 0; }
-void LupexProcessor::setCurrentProgram (int) {}
-const juce::String LupexProcessor::getProgramName (int) { return {}; }
-void LupexProcessor::changeProgramName (int, const juce::String&) {}
+bool ChorusProcessor::hasEditor() const { return true; }
+const juce::String ChorusProcessor::getName() const { return JucePlugin_Name; }
+bool ChorusProcessor::acceptsMidi() const { return false; }
+bool ChorusProcessor::producesMidi() const { return false; }
+double ChorusProcessor::getTailLengthSeconds() const { return 0.5; }
+int ChorusProcessor::getNumPrograms() { return 1; }
+int ChorusProcessor::getCurrentProgram() { return 0; }
+void ChorusProcessor::setCurrentProgram (int) {}
+const juce::String ChorusProcessor::getProgramName (int) { return {}; }
+void ChorusProcessor::changeProgramName (int, const juce::String&) {}
 
-void LupexProcessor::getStateInformation (juce::MemoryBlock& destData)
+void ChorusProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     auto state = parameters.apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
-void LupexProcessor::setStateInformation (const void* data, int sizeInBytes)
+void ChorusProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xml (getXmlFromBinary (data, sizeInBytes));
     if (xml && xml->hasTagName (parameters.apvts.state.getType()))
         parameters.apvts.replaceState (juce::ValueTree::fromXml (*xml));
 }
 
-} // namespace Lupex
+} // namespace Chorus
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new Lupex::LupexProcessor();
+    return new Chorus::ChorusProcessor();
 }

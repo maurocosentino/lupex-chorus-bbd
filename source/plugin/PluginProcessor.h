@@ -1,17 +1,17 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
-#include "parameters/LupexParameters.h"
-#include "dsp/LupexEngine.h"
+#include "parameters/ChorusParameters.h"
+#include "dsp/ChorusEngine.h"
 
-namespace Lupex
+namespace Chorus
 {
 
-    class LupexProcessor : public juce::AudioProcessor
+    class ChorusProcessor : public juce::AudioProcessor
     {
     public:
-        LupexProcessor();
-        ~LupexProcessor() override;
+        ChorusProcessor();
+        ~ChorusProcessor() override;
 
         void prepareToPlay (double sampleRate, int samplesPerBlock) override;
         void releaseResources() override;
@@ -34,12 +34,12 @@ namespace Lupex
         void getStateInformation (juce::MemoryBlock&) override;
         void setStateInformation (const void*, int) override;
 
-        LupexParameters parameters;
+        ChorusParameters parameters;
 
     private:
-        LupexEngine engine;
+        ChorusEngine engine;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LupexProcessor)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChorusProcessor)
     };
 
-} // namespace Lupex
+} // namespace Chorus
