@@ -23,22 +23,20 @@ namespace Chorus
                       float  mix);
 
     private:
-        // Canal L
-        DelayLine    delayL;
-        BBDFilter    filterInL;    // anti-aliasing
-        BBDFilter    filterOutL;   // reconstrucción
-        TapeEmulator tapeL;
-        WowFlutter   lfoL;
+        Lupex::DelayLine    delayL;
+        Lupex::BBDFilter    filterInL;
+        Lupex::BBDFilter    filterOutL;
+        Lupex::TapeEmulator tapeL;
+        WowFlutter          lfoL;
 
-        // Canal R
-        DelayLine    delayR;
-        BBDFilter    filterInR;
-        BBDFilter    filterOutR;
-        TapeEmulator tapeR;
-        WowFlutter   lfoR;
+        Lupex::DelayLine    delayR;
+        Lupex::BBDFilter    filterInR;
+        Lupex::BBDFilter    filterOutR;
+        Lupex::TapeEmulator tapeR;
+        WowFlutter          lfoR;
 
-        static constexpr float centerDelayMs { 15.0f };  // centro del delay BBD
-        static constexpr float maxDepthMs    {  5.0f };  // Depth 100% = ±5ms
+        static constexpr float centerDelayMs { 15.0f };
+        static constexpr float maxDepthMs    {  5.0f };
 
         float applyMix (float dry, float wet, float mix) const;
     };

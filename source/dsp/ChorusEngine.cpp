@@ -18,8 +18,8 @@ void ChorusEngine::prepare (double sampleRate, int)
     filterOutL.prepare (sampleRate);
     filterOutR.prepare (sampleRate);
 
-    tapeL.prepare (sampleRate);
-    tapeR.prepare (sampleRate);
+    // tapeL.prepare (sampleRate);
+    // tapeR.prepare (sampleRate);
 
     lfoL.prepare (sampleRate);
     lfoR.prepare (sampleRate);
