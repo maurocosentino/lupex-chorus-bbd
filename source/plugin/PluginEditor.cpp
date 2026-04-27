@@ -85,7 +85,7 @@ void ChorusEditor::resized()
     knobDepth.setBounds (colRight, 20, knobS, knobS + 14);
 
     // Mix — centrado — fila 2
-    knobMix.setBounds (getWidth() / 2 - knobS / 2, 150, knobS, knobS + 14);
+    knobMix.setBounds (getWidth() / 2 - knobS / 2, 105, knobS, knobS + 14);
 
     // Bypass centrado abajo
     const int fsSize = 130;
