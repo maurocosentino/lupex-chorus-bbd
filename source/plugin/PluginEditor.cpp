@@ -52,19 +52,19 @@ void ChorusEditor::paint (juce::Graphics& g)
 
     if (ledOn)
     {
-        g.setColour (juce::Colour (0x22dd4466));
+        g.setColour (juce::Colour (0x55ddfff0));
         g.fillEllipse (lx - ls * 0.5f, ly - ls * 0.5f, ls * 2.0f, ls * 2.0f);
     }
 
     g.setColour (juce::Colour (0xff111111));
     g.fillEllipse (lx - 1.0f, ly - 1.0f, ls + 2.0f, ls + 2.0f);
 
-    g.setColour (ledOn ? juce::Colour (0xffdd4466)
-                       : juce::Colour (0xff1a2a2a));
+    g.setColour (ledOn ? juce::Colour (0xffddfff0)
+                   : juce::Colour (0xff1a2a2a));
     g.fillEllipse (lx, ly, ls, ls);
 
-    g.setColour (ledOn ? juce::Colour (0x44990022)
-                       : juce::Colour (0x66000000));
+    g.setColour (ledOn ? juce::Colour (0x4488ccaa)
+                   : juce::Colour (0x66000000));
     g.fillEllipse (lx, ly + ls * 0.4f, ls, ls * 0.6f);
 
     g.setColour (juce::Colours::white.withAlpha (ledOn ? 0.85f : 0.2f));
