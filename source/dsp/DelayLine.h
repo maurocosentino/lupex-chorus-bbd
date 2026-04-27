@@ -12,8 +12,9 @@ namespace Lupex
         void prepare (double sampleRate, float maxDelayMs);
         void reset();
 
-        float read  (float delayMs);
-        void  write (float sample);
+        float read       (float delayMs);
+        float readDirect (float delayMs);
+        void  write      (float sample);
 
     private:
         float msToSamples (float ms) const;

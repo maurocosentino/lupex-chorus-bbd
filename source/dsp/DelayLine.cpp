@@ -74,6 +74,23 @@ namespace Lupex
         return sample;
     }
 
+    float DelayLine::readDirect (float delayMs)
+    {
+        int bufferSize = (int)buffer.size();
+
+        float delaySamples = msToSamples (delayMs);
+        float pos = (float)writeIndex - delaySamples;
+
+        while (pos < 0.0f)
+            pos += (float)bufferSize;
+
+        int index0 = (int)pos % bufferSize;
+        int index1 = (index0 + 1) % bufferSize;
+        float frac = pos - std::floor (pos);
+
+        return buffer[index0] + frac * (buffer[index1] - buffer[index0]);
+    }
+
     void DelayLine::write (float sample)
     {
         buffer[(size_t)writeIndex] = sample;

@@ -69,14 +69,14 @@ void ChorusEngine::process (float* channelL, float* channelR,
         // Cadena L: filtro in → delay → filtro out → tape
         float inL = filterInL.process (dryL);
         delayL.write (inL);
-        float wetL = delayL.read (delayL_ms);
+        float wetL = delayL.readDirect (delayL_ms);
         wetL = filterOutL.process (wetL);
         wetL = tapeL.process (wetL);
 
         // Cadena R: idéntica con LFO en cuadratura
         float inR = filterInR.process (dryR);
         delayR.write (inR);
-        float wetR = delayR.read (delayR_ms);
+        float wetR = delayR.readDirect (delayR_ms);
         wetR = filterOutR.process (wetR);
         wetR = tapeR.process (wetR);
 
