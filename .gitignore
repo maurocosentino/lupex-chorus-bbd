@@ -1,0 +1,15 @@
+.idea/
+.DS_Store
+
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+Testing/
+
+*.vst3
+*.vst3/
+
+.vs/
