@@ -1,61 +1,47 @@
 #include "WowFlutter.h"
-#include <cmath>
 #include <algorithm>
-#include <cstdlib>
 
-namespace Lupex
+namespace Chorus
 {
+
     void WowFlutter::prepare (double sr)
     {
         sampleRate = sr;
-        // Fases aleatorias — L y R arrancan distintos
-        wowPhase     = static_cast<float> (std::rand()) / RAND_MAX;
-        flutterPhase = static_cast<float> (std::rand()) / RAND_MAX;
-        modPhase     = static_cast<float> (std::rand()) / RAND_MAX;
-        noiseState   = 0.0f;
+        phase      = 0.0f;
     }
 
     void WowFlutter::reset()
     {
-        wowPhase    = 0.0f;
-        flutterPhase = 0.0f;
-        noiseState  = 0.0f;
+        phase = 0.0f;
     }
 
     float WowFlutter::process()
     {
-        // Modulador lento del wowRate
-        modPhase += static_cast<float> (modRate / sampleRate);
-        if (modPhase > 1.0f) modPhase -= 1.0f;
+        // Avanzar fase
+        phase += static_cast<float> (rate / sampleRate);
+        if (phase > 1.0f) phase -= 1.0f;
 
-        float currentWowRate = wowRate + std::sin (modPhase * 6.28318f) * modDepth;
-        currentWowRate = std::max (0.1f, currentWowRate);
+        // Senoide pura con offset de fase aplicado
+        float modulatedPhase = phase + phaseOffset;
+        if (modulatedPhase > 1.0f) modulatedPhase -= 1.0f;
 
-        // Wow con rate modulado
-        wowPhase += static_cast<float> (currentWowRate / sampleRate);
-        if (wowPhase > 1.0f) wowPhase -= 1.0f;
-
-        // Flutter
-        flutterPhase += static_cast<float> (flutterRate / sampleRate);
-        if (flutterPhase > 1.0f) flutterPhase -= 1.0f;
-
-        float wow     = std::sin (wowPhase     * 6.28318f) * wowDepth;
-        float flutter = std::sin (flutterPhase * 6.28318f) * flutterDepth;
-
-        // Ruido orgánico mezclado con wow
-        float noise = nextNoise();
-        wow += noise * wowDepth * 0.3f;
-
-        return wow + flutter;
+        return std::sin (modulatedPhase * twoPi) * depth;
     }
 
-    float WowFlutter::nextNoise()
+    void WowFlutter::setRate (float hz)
     {
-        float raw = (static_cast<float> (std::rand()) / RAND_MAX) * 2.0f - 1.0f;
-        noiseState = noiseState * noiseSmooth + raw * (1.0f - noiseSmooth);
-        return noiseState;
+        rate = std::max (0.1f, hz);
     }
 
-    void WowFlutter::setWowDepth (float ms)     { wowDepth     = ms; }
-    void WowFlutter::setFlutterDepth (float ms) { flutterDepth = ms; }
-}
+    void WowFlutter::setDepth (float ms)
+    {
+        depth = std::max (0.0f, ms);
+    }
+
+    void WowFlutter::setPhaseOffset (float p)
+    {
+        // Clampear entre 0.0 y 1.0
+        phaseOffset = p - std::floor (p);
+    }
+
+} // namespace Chorus
