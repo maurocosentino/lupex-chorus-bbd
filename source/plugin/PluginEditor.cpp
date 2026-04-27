@@ -33,6 +33,11 @@ ChorusEditor::~ChorusEditor()
 void ChorusEditor::paint (juce::Graphics& g)
 {
     drawPedalBody (g);
+    g.setColour (juce::Colour (0xff1a4a5a));
+    g.setFont (juce::FontOptions (11.0f).withStyle ("Bold"));
+    g.drawText ("FAUZ AUDIO",
+            0, getHeight() - 24, getWidth(), 12,
+            juce::Justification::centred);
 
     bool bypassed = processor.parameters.getBypass();
     bool ledOn    = !bypassed;

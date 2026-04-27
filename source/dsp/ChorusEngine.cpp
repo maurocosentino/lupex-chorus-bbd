@@ -77,8 +77,8 @@ void ChorusEngine::process (float* channelL, float* channelR,
         wetR = filterOutR.process (wetR);
         wetR = tapeR.process (wetR);
 
-        channelL[i] = applyMix (dryL, wetL, mix);
-        channelR[i] = applyMix (dryR, wetR, mix);
+        channelL[i] = applyMix (dryL,  wetL, mix);
+        channelR[i] = applyMix (dryR, -wetR, mix);
     }
 }
 
