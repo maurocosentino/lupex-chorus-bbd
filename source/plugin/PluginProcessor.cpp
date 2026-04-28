@@ -33,11 +33,13 @@ void ChorusProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         return;
 
     engine.process (buffer.getWritePointer (0),
-                    buffer.getWritePointer (1),
-                    buffer.getNumSamples(),
-                    parameters.getRate(),
-                    parameters.getDepth(),
-                    parameters.getMix());
+                buffer.getWritePointer (1),
+                buffer.getNumSamples(),
+                parameters.getRate(),
+                parameters.getDepth(),
+                parameters.getLevel(),
+                parameters.getLow(),
+                parameters.getHigh());
 }
 
 juce::AudioProcessorEditor* ChorusProcessor::createEditor()

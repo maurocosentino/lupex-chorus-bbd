@@ -12,13 +12,17 @@ ChorusEditor::ChorusEditor (ChorusProcessor& p)
 
     addAndMakeVisible (knobRate);
     addAndMakeVisible (knobDepth);
-    addAndMakeVisible (knobMix);
+    addAndMakeVisible (knobLevel);
+    addAndMakeVisible (knobLow);
+    addAndMakeVisible (knobHigh);
     addAndMakeVisible (bypass);
 
     auto& apvts = processor.parameters.apvts;
     attachRate  = std::make_unique<SliderAttachment> (apvts, "rate",  knobRate);
     attachDepth = std::make_unique<SliderAttachment> (apvts, "depth", knobDepth);
-    attachMix   = std::make_unique<SliderAttachment> (apvts, "mix",   knobMix);
+    attachLevel = std::make_unique<SliderAttachment> (apvts, "level", knobLevel);
+    attachLow   = std::make_unique<SliderAttachment> (apvts, "low",   knobLow);
+    attachHigh  = std::make_unique<SliderAttachment> (apvts, "high",  knobHigh);
     attachBypass = std::make_unique<ButtonAttachment> (apvts, "bypass", bypass);
 
     processor.parameters.apvts.addParameterListener ("bypass", this);
@@ -79,18 +83,22 @@ void ChorusEditor::paint (juce::Graphics& g)
     g.fillEllipse (lx + ls * 0.5f, ly + ls * 0.55f, ls * 0.2f, ls * 0.15f);
 }
 
-void ChorusEditor::resized()
+    void ChorusEditor::resized()
 {
     const int knobS    = 100;
     const int colLeft  = 5;
     const int colRight = getWidth() - 5 - knobS;
 
-    // Rate (izq) y Depth (der) — fila 1
-    knobRate .setBounds (colLeft,  20, knobS, knobS + 14);
-    knobDepth.setBounds (colRight, 20, knobS, knobS + 14);
+    // Fila 1: Rate (izq) y Depth (der)
+    knobRate .setBounds (colLeft,  15, knobS, knobS + 14);
+    knobDepth.setBounds (colRight, 15, knobS, knobS + 14);
 
-    // Mix — centrado — fila 2
-    knobMix.setBounds (getWidth() / 2 - knobS / 2, 105, knobS, knobS + 14);
+    // Fila 2: Low (izq) y High (der)
+    knobLow .setBounds (colLeft,  125, knobS, knobS + 14);
+    knobHigh.setBounds (colRight, 125, knobS, knobS + 14);
+
+    // Fila 3: Level centrado
+    knobLevel.setBounds (getWidth() / 2 - knobS / 2, 235, knobS, knobS + 14);
 
     // Bypass centrado abajo
     const int fsSize = 130;
