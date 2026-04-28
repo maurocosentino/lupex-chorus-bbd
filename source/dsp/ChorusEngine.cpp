@@ -86,9 +86,9 @@ void ChorusEngine::process (float* channelL, float* channelR,
         wetR = lowShelfR.process  (wetR);
         wetR = highShelfR.process (wetR);
 
-        // dry intacto + wet escalado por level
         channelL[i] = dryL + wetL * level;
-        channelR[i] = dryR + wetR * level;
+
+        channelR[i] = wetR * level + dryR * 0.7f;
     }
 }
 
