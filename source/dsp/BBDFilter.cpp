@@ -32,8 +32,6 @@ namespace Lupex
 
     float BBDFilter::calculateCoefficient (float tone) const
     {
-        // Mapeamos tone (0.0–1.0) a frecuencia de corte (800Hz–8000Hz)
-        // A menor tone → menor frecuencia → más oscuro
         float cutoffHz = 1000.0f + tone * 5000.0f;
         // Fórmula estándar para coeficiente de filtro RC digital
         float rc = 1.0f / (2.0f * 3.14159265f * cutoffHz);

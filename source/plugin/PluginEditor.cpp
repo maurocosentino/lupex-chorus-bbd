@@ -85,20 +85,25 @@ void ChorusEditor::paint (juce::Graphics& g)
 
     void ChorusEditor::resized()
 {
-    const int knobS    = 100;
-    const int colLeft  = 5;
-    const int colRight = getWidth() - 5 - knobS;
+    // Fila 1: Low y High
+    const int knobSm  = 80;
+    const int fila1Y  = 15;
+    const int gap     = 20;  // espacio entre los dos knobs
+    const int totalW  = knobSm * 2 + gap;
+    const int startX  = getWidth() / 2 - totalW / 2;
 
-    // Fila 1: Rate (izq) y Depth (der)
-    knobRate .setBounds (colLeft,  15, knobS, knobS + 14);
-    knobDepth.setBounds (colRight, 15, knobS, knobS + 14);
+    knobLow .setBounds (startX,           fila1Y, knobSm, knobSm + 14);
+    knobHigh.setBounds (startX + knobSm + gap, fila1Y, knobSm, knobSm + 14);
 
-    // Fila 2: Low (izq) y High (der)
-    knobLow .setBounds (colLeft,  125, knobS, knobS + 14);
-    knobHigh.setBounds (colRight, 125, knobS, knobS + 14);
+    // Fila 2: Level (izq), Rate (centro), Depth (der)
+    const int fila2Y = 110;
+    const int colMid   = getWidth() / 2 - knobSm / 2;
+    const int colLeft2 = 10;
+    const int colRight2 = getWidth() - 10 - knobSm;
 
-    // Fila 3: Level centrado
-    knobLevel.setBounds (getWidth() / 2 - knobS / 2, 235, knobS, knobS + 14);
+    knobLevel.setBounds (colLeft2,  fila2Y, knobSm, knobSm + 14);
+    knobRate .setBounds (colMid,    fila2Y, knobSm, knobSm + 14);
+    knobDepth.setBounds (colRight2, fila2Y, knobSm, knobSm + 14);
 
     // Bypass centrado abajo
     const int fsSize = 130;

@@ -26,7 +26,6 @@ namespace Chorus
         double sampleRate { 44100.0 };
         float  gain       { 1.0f };
 
-        // Frecuencias de corte fijas según especificación MXR
         // Low shelf:  70Hz (min) — 800Hz (max)
         // High shelf: 660Hz (min) — flat (max)
         float cutoffHz { 0.0f };

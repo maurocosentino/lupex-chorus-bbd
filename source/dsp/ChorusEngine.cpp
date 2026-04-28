@@ -23,7 +23,7 @@ void ChorusEngine::prepare (double sampleRate, int)
     lfoL.setPhaseOffset (0.0f);
     lfoR.setPhaseOffset (0.25f);
 
-    // Filtros BBD con cutoff alto y fijo — no colorean el tono
+    // Filtros BBD con cutoff alto y fijo
     filterInL.setTone  (1.0f);
     filterInR.setTone  (1.0f);
     filterOutL.setTone (1.0f);
@@ -86,7 +86,7 @@ void ChorusEngine::process (float* channelL, float* channelR,
         wetR = lowShelfR.process  (wetR);
         wetR = highShelfR.process (wetR);
 
-        // Estilo MXR: dry intacto + wet escalado por level
+        // dry intacto + wet escalado por level
         channelL[i] = dryL + wetL * level;
         channelR[i] = dryR + wetR * level;
     }
