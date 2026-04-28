@@ -26,7 +26,9 @@ namespace Chorus
 
         Lupex::LupexKnob knobRate  { "RATE",  laf };
         Lupex::LupexKnob knobDepth { "DEPTH", laf };
-        Lupex::LupexKnob knobMix   { "MIX",   laf };
+        Lupex::LupexKnob knobLevel { "LEVEL", laf };
+        Lupex::LupexKnob knobLow   { "LOW",   laf };
+        Lupex::LupexKnob knobHigh  { "HIGH",  laf };
 
         Lupex::BypassButton bypass;
 
@@ -35,7 +37,9 @@ namespace Chorus
 
         std::unique_ptr<SliderAttachment> attachRate;
         std::unique_ptr<SliderAttachment> attachDepth;
-        std::unique_ptr<SliderAttachment> attachMix;
+        std::unique_ptr<SliderAttachment> attachLevel;
+        std::unique_ptr<SliderAttachment> attachLow;
+        std::unique_ptr<SliderAttachment> attachHigh;
         std::unique_ptr<ButtonAttachment> attachBypass;
 
         void drawPedalBody  (juce::Graphics&);

@@ -10,7 +10,6 @@ namespace Lupex
 
         void reset();
 
-        // drive: cuánta saturación aplicamos (0.0 = ninguna, 1.0 = máxima)
         void setDrive (float drive);
 
         float process (float input);

@@ -46,6 +46,8 @@ target_sources(ChorusBBD
         source/dsp/WowFlutter.h
         source/dsp/ChorusEngine.cpp
         source/dsp/ChorusEngine.h
+        source/dsp/ShelfFilter.cpp
+        source/dsp/ShelfFilter.h
         source/parameters/ChorusParameters.cpp
         source/parameters/ChorusParameters.h
         source/parameters/ParameterIDs.h

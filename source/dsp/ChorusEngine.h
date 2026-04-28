@@ -1,9 +1,9 @@
 #pragma once
-
 #include "DelayLine.h"
 #include "BBDFilter.h"
 #include "TapeEmulator.h"
 #include "WowFlutter.h"
+#include "ShelfFilter.h"
 
 namespace Chorus
 {
@@ -20,25 +20,29 @@ namespace Chorus
                       int    numSamples,
                       float  rate,
                       float  depth,
-                      float  mix);
+                      float  level,
+                      float  low,
+                      float  high);
 
     private:
         Lupex::DelayLine    delayL;
         Lupex::BBDFilter    filterInL;
         Lupex::BBDFilter    filterOutL;
-        Lupex::TapeEmulator tapeL;
         WowFlutter          lfoL;
 
         Lupex::DelayLine    delayR;
         Lupex::BBDFilter    filterInR;
         Lupex::BBDFilter    filterOutR;
-        Lupex::TapeEmulator tapeR;
         WowFlutter          lfoR;
 
-        static constexpr float centerDelayMs { 15.0f };
-        static constexpr float maxDepthMs    {  5.0f };
+        // Shelf filters sobre el wet — emula los tone controls del MXR
+        ShelfFilter lowShelfL  { ShelfFilter::Type::LowShelf  };
+        ShelfFilter lowShelfR  { ShelfFilter::Type::LowShelf  };
+        ShelfFilter highShelfL { ShelfFilter::Type::HighShelf };
+        ShelfFilter highShelfR { ShelfFilter::Type::HighShelf };
 
-        float applyMix (float dry, float wet, float mix) const;
+        static constexpr float centerDelayMs { 10.0f };
+        static constexpr float maxDepthMs    {  1.5f };
     };
 
 } // namespace Chorus

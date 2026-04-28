@@ -13,7 +13,9 @@ namespace Chorus
 
         float getRate()  const;
         float getDepth() const;
-        float getMix()   const;
+        float getLevel() const;
+        float getLow()   const;
+        float getHigh()  const;
         bool  getBypass() const;
 
     private:
