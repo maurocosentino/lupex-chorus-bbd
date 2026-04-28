@@ -6,8 +6,13 @@ namespace Chorus
 
 ShelfFilter::ShelfFilter (Type t) : type (t)
 {
-    // Frecuencia de corte central de cada shelf
-    cutoffHz = (type == Type::LowShelf) ? 400.0f : 1000.0f;
+    // Frecuencia inicial — mínimo de cada rango MXR
+    cutoffHz = (type == Type::LowShelf) ? 70.0f : 660.0f;
+}
+void ShelfFilter::setCutoff (float hz)
+{
+    cutoffHz = hz;
+    calculateCoefficients();
 }
 
 void ShelfFilter::prepare (double sr)
@@ -25,6 +30,15 @@ void ShelfFilter::reset()
 void ShelfFilter::setGain (float g)
 {
     gain = std::clamp (g, 0.0f, 1.0f);
+
+    // El knob mueve la frecuencia de corte según rango
+    // LOW:  0.0 → 70Hz,  1.0 → 800Hz
+    // HIGH: 0.0 → 660Hz, 1.0 → 20000Hz
+    if (type == Type::LowShelf)
+        cutoffHz = 70.0f + gain * (800.0f - 70.0f);
+    else
+        cutoffHz = 660.0f + gain * (20000.0f - 660.0f);
+
     calculateCoefficients();
 }
 
@@ -43,32 +57,31 @@ float ShelfFilter::process (float input)
 
 void ShelfFilter::calculateCoefficients()
 {
-    // gain 1.0 = flat (sin efecto), gain 0.0 = corte máximo (-12dB low, -6dB high)
     const double pi = 3.14159265358979;
     const double w0 = 2.0 * pi * cutoffHz / sampleRate;
     const double cosW = std::cos (w0);
     const double sinW = std::sin (w0);
 
-    // dBGain: 0.0 a -12dB para low shelf, 0.0 a -6dB para high shelf
+    // Corte fijo — el knob mueve la frecuencia
     float maxCut = (type == Type::LowShelf) ? -12.0f : -6.0f;
-    float dBGain = maxCut * (1.0f - gain);  // gain=1 → 0dB, gain=0 → maxCut
-    double A  = std::pow (10.0, dBGain / 40.0);  // amplitud lineal (sqrt para shelf)
+    float dBGain = maxCut;  // siempre al máximo corte
+    double A = std::pow (10.0, dBGain / 40.0);
 
-    double S  = 1.0;  // slope = 1 (máxima pendiente)
+    double S     = 1.0;
     double alpha = sinW / 2.0 * std::sqrt ((A + 1.0 / A) * (1.0 / S - 1.0) + 2.0);
 
     if (type == Type::LowShelf)
     {
-        double a0 =        (A + 1.0) + (A - 1.0) * cosW + 2.0 * std::sqrt (A) * alpha;
+        double a0 =       (A + 1.0) + (A - 1.0) * cosW + 2.0 * std::sqrt (A) * alpha;
         b0 =  A * ((A + 1.0) - (A - 1.0) * cosW + 2.0 * std::sqrt (A) * alpha) / a0;
         b1 =  2.0 * A * ((A - 1.0) - (A + 1.0) * cosW) / a0;
         b2 =  A * ((A + 1.0) - (A - 1.0) * cosW - 2.0 * std::sqrt (A) * alpha) / a0;
         a1 = -2.0 * ((A - 1.0) + (A + 1.0) * cosW) / a0;
         a2 =        ((A + 1.0) + (A - 1.0) * cosW - 2.0 * std::sqrt (A) * alpha) / a0;
     }
-    else // HighShelf
+    else
     {
-        double a0 =        (A + 1.0) - (A - 1.0) * cosW + 2.0 * std::sqrt (A) * alpha;
+        double a0 =       (A + 1.0) - (A - 1.0) * cosW + 2.0 * std::sqrt (A) * alpha;
         b0 =  A * ((A + 1.0) + (A - 1.0) * cosW + 2.0 * std::sqrt (A) * alpha) / a0;
         b1 = -2.0 * A * ((A - 1.0) + (A + 1.0) * cosW) / a0;
         b2 =  A * ((A + 1.0) + (A - 1.0) * cosW - 2.0 * std::sqrt (A) * alpha) / a0;
@@ -76,5 +89,4 @@ void ShelfFilter::calculateCoefficients()
         a2 =        ((A + 1.0) - (A - 1.0) * cosW - 2.0 * std::sqrt (A) * alpha) / a0;
     }
 }
-
 } // namespace Chorus

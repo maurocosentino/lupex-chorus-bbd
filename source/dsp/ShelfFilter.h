@@ -17,6 +17,8 @@ namespace Chorus
         // gain: 0.0 = corte máximo, 1.0 = flat
         void setGain (float gain);
 
+        void setCutoff (float hz);
+
         float process (float input);
 
     private:
