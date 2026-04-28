@@ -72,6 +72,7 @@ juce_add_binary_data(ChorusAssets
         assets/images/switch_toggle.png
         assets/images/footswitch_up.png
         assets/images/footswitch_down.png
+        assets/images/screenshot.png
 )
 
 target_include_directories(ChorusBBD
