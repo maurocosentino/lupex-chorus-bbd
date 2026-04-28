@@ -41,8 +41,8 @@ namespace Chorus
         ShelfFilter highShelfL { ShelfFilter::Type::HighShelf };
         ShelfFilter highShelfR { ShelfFilter::Type::HighShelf };
 
-        static constexpr float centerDelayMs { 10.0f };
-        static constexpr float maxDepthMs    {  1.5f };
+        static constexpr float centerDelayMs { 12.0f };
+        static constexpr float maxDepthMs    {  2.0f };
     };
 
 } // namespace Chorus

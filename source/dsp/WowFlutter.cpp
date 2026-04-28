@@ -17,11 +17,10 @@ namespace Chorus
 
     float WowFlutter::process()
     {
-        // Avanzar fase
-        phase += static_cast<float> (rate / sampleRate);
+        smoothedRate += (rate - smoothedRate) * rateSmoothing;
+        phase += static_cast<float> (smoothedRate / sampleRate);
         if (phase > 1.0f) phase -= 1.0f;
 
-        // Senoide pura con offset de fase aplicado
         float modulatedPhase = phase + phaseOffset;
         if (modulatedPhase > 1.0f) modulatedPhase -= 1.0f;
 

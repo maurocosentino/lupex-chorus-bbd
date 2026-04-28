@@ -21,7 +21,8 @@ namespace Chorus
         float  phaseOffset  { 0.0f };
         float  rate         { 1.0f };   // Hz
         float  depth        { 3.0f };   // ms de modulación
-
+        float smoothedRate { 1.0f };
+        static constexpr float rateSmoothing { 0.0005f };
         static constexpr float twoPi { 6.28318f };
     };
 
