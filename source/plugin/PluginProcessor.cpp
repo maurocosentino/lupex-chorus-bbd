@@ -29,8 +29,8 @@ void ChorusProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
     juce::ScopedNoDenormals noDenormals;
 
-    if (parameters.getBypass())
-        return;
+    // if (parameters.getBypass())
+    //     return;
 
     engine.process (buffer.getWritePointer (0),
                 buffer.getWritePointer (1),
@@ -39,7 +39,8 @@ void ChorusProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 parameters.getDepth(),
                 parameters.getLevel(),
                 parameters.getLow(),
-                parameters.getHigh());
+                parameters.getHigh(),
+                parameters.getBypass());
 }
 
 juce::AudioProcessorEditor* ChorusProcessor::createEditor()

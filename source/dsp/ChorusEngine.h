@@ -22,7 +22,8 @@ namespace Chorus
                       float  depth,
                       float  level,
                       float  low,
-                      float  high);
+                      float  high,
+                      bool   bypassed);
 
     private:
         Lupex::DelayLine    delayL;
@@ -45,6 +46,8 @@ namespace Chorus
         float dcBlockX_L { 0.0f }, dcBlockY_L { 0.0f };
         float dcBlockX_R { 0.0f }, dcBlockY_R { 0.0f };
 
+        float bypassGain { 0.0f };  // 0.0 = bypassed, 1.0 = activo
+
         juce::dsp::Oversampling<float> oversampler {
             2,  // numero de canales
             1,  // factor: 2^1 = 2x
@@ -54,9 +57,10 @@ namespace Chorus
         int savedBlockSize { 0 };
 
         static constexpr float paramSmoothing { 0.002f };
-        static constexpr float centerDelayMs  { 12.0f };
+        static constexpr float centerDelayMs { 13.5f };
         static constexpr float maxDepthMs     {  2.0f };
         static constexpr float dcBlockR { 0.995f };
+        static constexpr float bypassSmoothing { 0.001f };
     };
 
 } // namespace Chorus

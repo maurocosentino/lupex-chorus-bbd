@@ -42,15 +42,17 @@ void ChorusEngine::reset()
     dcBlockX_L = dcBlockY_L = 0.0f;
     dcBlockX_R = dcBlockY_R = 0.0f;
     oversampler.reset();
+    bypassGain = 0.0f;
 }
 
-void ChorusEngine::process (float* channelL, float* channelR,
-                             int    numSamples,
-                             float  rate,
-                             float  depth,
-                             float  level,
-                             float  low,
-                             float  high)
+    void ChorusEngine::process (float* channelL, float* channelR,
+                                 int    numSamples,
+                                 float  rate,
+                                 float  depth,
+                                 float  level,
+                                 float  low,
+                                 float  high,
+                                 bool   bypassed)
 {
     const float depthMs = depth * maxDepthMs;
 
@@ -100,8 +102,13 @@ void ChorusEngine::process (float* channelL, float* channelR,
         float newDcR = wetR - dcBlockX_R + dcBlockR * dcBlockY_R;
         dcBlockX_R = wetR; dcBlockY_R = newDcR; wetR = newDcR;
 
-        outL[i] = dryL + wetL * smoothedLevel;
-        outR[i] = dryR * 0.7f + wetR * smoothedLevel;
+        // Smooth de bypass
+        float targetGain = bypassed ? 0.0f : 1.0f;
+        bypassGain += (targetGain - bypassGain) * bypassSmoothing;
+
+        float wetMix = smoothedLevel * bypassGain;
+        outL[i] = dryL + wetL * wetMix;
+        outR[i] = dryR * 0.7f + wetR * wetMix;
     }
 
     oversampler.processSamplesDown (block);
