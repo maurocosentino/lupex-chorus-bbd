@@ -136,6 +136,7 @@ if(CHORUS_ENABLE_TESTS)
             PRIVATE
             Catch2::Catch2WithMain
             juce::juce_core
+            juce::juce_dsp
     )
 
     include(CTest)
