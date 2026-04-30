@@ -76,19 +76,34 @@ namespace Lupex
 
     float DelayLine::readDirect (float delayMs)
     {
-        int bufferSize = (int)buffer.size();
+    int bufferSize = (int)buffer.size();
 
-        float delaySamples = msToSamples (delayMs);
-        float pos = (float)writeIndex - delaySamples;
+    float delaySamples = msToSamples (delayMs);
+    float pos = (float)writeIndex - delaySamples;
 
-        while (pos < 0.0f)
-            pos += (float)bufferSize;
+    while (pos < 0.0f)
+        pos += (float)bufferSize;
 
-        int index0 = (int)pos % bufferSize;
-        int index1 = (index0 + 1) % bufferSize;
-        float frac = pos - std::floor (pos);
+    // Interpolación cúbica de Hermite — 4 samples
+    int i1 = (int)pos % bufferSize;
+    int i0 = (i1 - 1 + bufferSize) % bufferSize;
+    int i2 = (i1 + 1) % bufferSize;
+    int i3 = (i1 + 2) % bufferSize;
 
-        return buffer[index0] + frac * (buffer[index1] - buffer[index0]);
+    float t  = pos - std::floor (pos);  // fracción entre 0 y 1
+
+    float p0 = buffer[i0];
+    float p1 = buffer[i1];
+    float p2 = buffer[i2];
+    float p3 = buffer[i3];
+
+    // Coeficientes de Hermite
+    float a = -0.5f*p0 + 1.5f*p1 - 1.5f*p2 + 0.5f*p3;
+    float b =       p0 - 2.5f*p1 + 2.0f*p2 - 0.5f*p3;
+    float c = -0.5f*p0            + 0.5f*p2;
+    float d =                 p1;
+
+    return ((a * t + b) * t + c) * t + d;
     }
 
     void DelayLine::write (float sample)

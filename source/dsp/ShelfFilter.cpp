@@ -27,13 +27,14 @@ void ShelfFilter::reset()
     x1 = x2 = y1 = y2 = 0.0;
 }
 
-void ShelfFilter::setGain (float g)
+    void ShelfFilter::setGain (float g)
 {
-    gain = std::clamp (g, 0.0f, 1.0f);
+    float clamped = std::clamp (g, 0.0f, 1.0f);
 
-    // El knob mueve la frecuencia de corte según rango
-    // LOW:  0.0 → 70Hz,  1.0 → 800Hz
-    // HIGH: 0.0 → 660Hz, 1.0 → 20000Hz
+    if (std::abs (clamped - gain) < 0.0001f) return;
+
+    gain = clamped;
+
     if (type == Type::LowShelf)
         cutoffHz = 70.0f + gain * (800.0f - 70.0f);
     else

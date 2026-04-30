@@ -97,6 +97,13 @@ target_link_libraries(ChorusBBD
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
 )
+include(FetchContent)
+FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v3.5.2
+)
+FetchContent_MakeAvailable(Catch2)
 
 if(CHORUS_ENABLE_TESTS)
     enable_testing()
@@ -106,6 +113,12 @@ if(CHORUS_ENABLE_TESTS)
             tests/BBDFilterTest.cpp
             tests/ChorusEngineTest.cpp
             tests/ParametersTest.cpp
+            source/dsp/DelayLine.cpp
+            source/dsp/BBDFilter.cpp
+            source/dsp/TapeEmulator.cpp
+            source/dsp/WowFlutter.cpp
+            source/dsp/ChorusEngine.cpp
+            source/dsp/ShelfFilter.cpp
     )
 
     target_include_directories(ChorusTests
@@ -113,10 +126,19 @@ if(CHORUS_ENABLE_TESTS)
             "${CMAKE_CURRENT_SOURCE_DIR}/source"
     )
 
+    target_compile_definitions(ChorusTests
+            PRIVATE
+            JUCE_WEB_BROWSER=0
+            JUCE_USE_CURL=0
+    )
+
     target_link_libraries(ChorusTests
             PRIVATE
+            Catch2::Catch2WithMain
             juce::juce_core
     )
 
-    add_test(NAME ChorusTests COMMAND ChorusTests)
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(ChorusTests)
 endif()

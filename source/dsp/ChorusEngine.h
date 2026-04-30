@@ -1,7 +1,6 @@
 #pragma once
 #include "DelayLine.h"
 #include "BBDFilter.h"
-#include "TapeEmulator.h"
 #include "WowFlutter.h"
 #include "ShelfFilter.h"
 
@@ -26,23 +25,25 @@ namespace Chorus
 
     private:
         Lupex::DelayLine    delayL;
-        Lupex::BBDFilter    filterInL;
         Lupex::BBDFilter    filterOutL;
         WowFlutter          lfoL;
 
         Lupex::DelayLine    delayR;
-        Lupex::BBDFilter    filterInR;
         Lupex::BBDFilter    filterOutR;
         WowFlutter          lfoR;
 
-        // Shelf filters sobre el wet — emula los tone controls del MXR
         ShelfFilter lowShelfL  { ShelfFilter::Type::LowShelf  };
         ShelfFilter lowShelfR  { ShelfFilter::Type::LowShelf  };
         ShelfFilter highShelfL { ShelfFilter::Type::HighShelf };
         ShelfFilter highShelfR { ShelfFilter::Type::HighShelf };
 
-        static constexpr float centerDelayMs { 12.0f };
-        static constexpr float maxDepthMs    {  2.0f };
+        float smoothedLevel { 0.5f };
+        float smoothedLow   { 0.5f };
+        float smoothedHigh  { 0.5f };
+
+        static constexpr float paramSmoothing { 0.002f };
+        static constexpr float centerDelayMs  { 12.0f };
+        static constexpr float maxDepthMs     {  2.0f };
     };
 
 } // namespace Chorus
