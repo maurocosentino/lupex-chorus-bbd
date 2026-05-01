@@ -5,8 +5,11 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-release:
+  build:
     strategy:
       matrix:
         include:
@@ -61,14 +64,31 @@ jobs:
         run: |
           cd build/ChorusBBD_artefacts/Release/VST3
           zip -r ${{ matrix.artifact }}.zip "Lupex Chorus.vst3"
+          mv ${{ matrix.artifact }}.zip ${{ github.workspace }}/
 
       - name: Zip artifact (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          Compress-Archive -Path "build/ChorusBBD_artefacts/Release/VST3/Lupex Chorus.vst3" -DestinationPath ${{ matrix.artifact }}.zip
+          Compress-Archive -Path "build/ChorusBBD_artefacts/Release/VST3/Lupex Chorus.vst3" -DestinationPath "${{ matrix.artifact }}.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ matrix.artifact }}.zip
+          files: |
+            ChorusBBD-Linux-VST3/ChorusBBD-Linux-VST3.zip
+            ChorusBBD-Windows-VST3/ChorusBBD-Windows-VST3.zip
           token: ${{ secrets.GITHUB_TOKEN }}
